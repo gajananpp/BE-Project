@@ -4,7 +4,8 @@ import {
 	CardHeader,
 	CardMedia,
 	CardActions,
-	CardTitle
+	CardTitle,
+	CardText
 } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Slider from 'material-ui/Slider';
@@ -43,20 +44,30 @@ class SensorUI extends React.Component {
 							<Divider />
 							<CardMedia
 								overlay={<CardTitle title={`${obj.quantity.toUpperCase()}: ${lastReading[index].value}`} />}
+								overlayContainerStyle={{pointerEvents: 'none'}}
 								expandable={true}
 							>
 								<RTC reading={lastReading[index]} />
 							</CardMedia>
 							<Divider />
-							<CardActions expandable={true}>
-								<Slider 
-									style={{width: '95%', margin: 'auto', marginBottom: -30}}
-								/>
-								<Toggle 
-									label="Motor On/Off"
-									style={{width: '30%'}}
-								/>
-							</CardActions>
+							{ lastReading[index].quantity !== 'force' ?
+								(
+									<CardActions expandable={true}>
+										<CardText>Load: N/A</CardText>
+									</CardActions>
+								) :
+								(
+									<CardActions expandable={true}>
+										<Slider 
+											style={{width: '95%', margin: 'auto', marginBottom: -30}}
+										/>
+										<Toggle 
+											label="Motor On/Off"
+											style={{width: '50%'}}
+										/>
+									</CardActions>
+								)
+							}
 						</Card>
 					))
 				}				

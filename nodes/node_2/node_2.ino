@@ -95,7 +95,13 @@ void send_post_request(JsonArray& payload) {
   Serial.println("[HTTP] begin...");
   http.begin("http://192.168.0.102/2");
   http.addHeader("Content-Type", "application/json");
-  http.POST(buffer);
+  int httpCode = http.POST(buffer);
+  if (httpCode > 0) {
+    if (httpCode == HTTP_CODE_OK) {
+      String response = http.getString();
+      Serial.println(response);  
+    }
+  }
   http.writeToStream(&Serial);
   http.end();
 }

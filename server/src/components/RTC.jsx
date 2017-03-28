@@ -10,18 +10,23 @@ class RTC extends React.Component {
 	render() {
 		let data = {
 			date: new Date(),
-			[this.props.reading.quantity]: this.props.reading.value
+			[this.props.reading.quantity]: this.props.reading.value,			
 		};
 		let flow: {
 			duration: 1000
 		};
 		let chart: {
 			point: {
-				show: true
-			}
+				show: true,
+				focus: {
+					expand: {
+						enabled: true
+					}
+				}
+			},
 		};
 		return (
-			<div>
+			<div style={{marginTop: 10}}>
 				<RTChart 
 					fields={[`${this.props.reading.quantity}`]}
 					chart={chart}

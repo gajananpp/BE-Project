@@ -36,6 +36,7 @@ app.post('/1', (req, res) => {
 });
 app.post('/2', (req, res) => {
   io.emit('node2_reading', req.body);
+  res.send("It's Working !!!");
 });
 
 // catch 404 and forward to error handler

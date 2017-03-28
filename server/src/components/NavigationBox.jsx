@@ -20,7 +20,7 @@ class NavigationBox extends React.Component {
 
 	render() {
 		return (
-			<div style={{position: 'absolute', bottom: 15, right: 15, zIndex: 100}}>
+			<div style={{marginTop: 20, zIndex: 100}}>
 				<DropDownMenu value={this.state.value} onChange={this.handleChange}>
 					<MenuItem value={1} primaryText="Node 1" />
 					<MenuItem value={2} primaryText="Node 2" />
