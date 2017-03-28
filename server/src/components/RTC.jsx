@@ -1,5 +1,5 @@
 import React from 'react';
-import RTChart from 'react-rt-chart';
+import RTChart from '../react-rt-chart';
 
 class RTC extends React.Component {
 	constructor(props) {
