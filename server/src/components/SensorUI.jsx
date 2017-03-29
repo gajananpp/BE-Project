@@ -51,15 +51,13 @@ class SensorUI extends React.Component {
 	};
 
 	componentWillUpdate(nextProps, nextState) {
-		console.log("SensorUI updated");
-		console.log(this.props.nodeReadings);
 	}
 
 	render() {
+		const colors = ['#1f77b4', '#2ca02c'];
 		let lastReading;
 		if (this.props.nodeReadings.length !== 0) {
 			lastReading = this.props.nodeReadings[this.props.nodeReadings.length - 1];
-			console.log(lastReading);
 		}
 		return (
 			<div>
@@ -79,7 +77,7 @@ class SensorUI extends React.Component {
 								overlayContainerStyle={{pointerEvents: 'none'}}
 								expandable={true}
 							>
-								<RTC reading={lastReading[index]} />
+								<RTC reading={lastReading[index]} color={colors[index]} />
 							</CardMedia>
 							<Divider />
 							{ lastReading[index].quantity !== 'force' ?

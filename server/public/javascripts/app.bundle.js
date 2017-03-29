@@ -10501,19 +10501,16 @@ var SensorUI = function (_React$Component) {
 
 	_createClass(SensorUI, [{
 		key: 'componentWillUpdate',
-		value: function componentWillUpdate(nextProps, nextState) {
-			console.log("SensorUI updated");
-			console.log(this.props.nodeReadings);
-		}
+		value: function componentWillUpdate(nextProps, nextState) {}
 	}, {
 		key: 'render',
 		value: function render() {
 			var _this2 = this;
 
+			var colors = ['#1f77b4', '#2ca02c'];
 			var lastReading = void 0;
 			if (this.props.nodeReadings.length !== 0) {
 				lastReading = this.props.nodeReadings[this.props.nodeReadings.length - 1];
-				console.log(lastReading);
 			}
 			return _react2.default.createElement(
 				'div',
@@ -10536,7 +10533,7 @@ var SensorUI = function (_React$Component) {
 								overlayContainerStyle: { pointerEvents: 'none' },
 								expandable: true
 							},
-							_react2.default.createElement(_RTC2.default, { reading: lastReading[index] })
+							_react2.default.createElement(_RTC2.default, { reading: lastReading[index], color: colors[index] })
 						),
 						_react2.default.createElement(_Divider2.default, null),
 						lastReading[index].quantity !== 'force' ? _react2.default.createElement(
@@ -29274,6 +29271,9 @@ var RTC = function (_React$Component) {
 				duration: 1000
 			};
 			var chart = {
+				color: {
+					pattern: [this.props.color]
+				},
 				point: {
 					show: true,
 					focus: {

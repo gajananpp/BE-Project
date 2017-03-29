@@ -16,6 +16,9 @@ class RTC extends React.Component {
 			duration: 1000
 		};
 		let chart = {
+			color: {
+				pattern: [this.props.color]
+			},
 			point: {
 				show: true,
 				focus: {
