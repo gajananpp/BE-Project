@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+let node2Res = require('./responses/node2Res.js');
 
 var app = express();
 var server = require('http').Server(app);
@@ -23,20 +24,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 io.on('connection', (socket) => {
   console.log("Client Connected");
+  socket.on('toggle-motor', (data) => {
+    node2Res = data;
+  });
+  socket.on('toggle-manual-control', (data) => {
+    node2Res = data;
+  });
+  socket.on('update-motor-speed', (data) => {
+    node2Res = data;
+  });
 });
 
 // routes
 app.get('/', (req, res) => {
-	res.render('index', {title: 'Express'});
+	res.render('index', {title: 'WSN'});
 });
 app.post('/1', (req, res) => {
   io.emit('node1_reading', req.body);
 });
 app.post('/2', (req, res) => {
   io.emit('node2_reading', req.body);
-  res.send("It's Working !!!");
+  res.json(node2Res);
 });
 
 // catch 404 and forward to error handler
@@ -49,12 +60,13 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // res.status(err.status || 500);
+  // res.render('error');
+  res.redirect('/');
 });
 
 server.listen(80, "192.168.0.102");

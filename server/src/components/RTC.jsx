@@ -10,12 +10,12 @@ class RTC extends React.Component {
 	render() {
 		let data = {
 			date: new Date(),
-			[this.props.reading.quantity]: this.props.reading.value,			
+			[this.props.reading.quantity]: this.props.reading.value,
 		};
-		let flow: {
+		let flow = {
 			duration: 1000
 		};
-		let chart: {
+		let chart = {
 			point: {
 				show: true,
 				focus: {
@@ -23,7 +23,7 @@ class RTC extends React.Component {
 						enabled: true
 					}
 				}
-			},
+			}
 		};
 		return (
 			<div style={{marginTop: 10}}>

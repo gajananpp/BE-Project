@@ -35,12 +35,13 @@ void setup() {
 
 void loop() {
   humidity = read_humidity();
-  delay(1000);
+  delay(500);
   temperature = read_temperature();
   float readings[N_QUANTITIES] = {humidity, temperature};
   format_data(readings, N_QUANTITIES);
   JsonArray& json_data = generate_json(sensor_data, N_QUANTITIES);
   send_post_request(json_data); 
+  delay(1000);
 }
 
 void connect_to_AP(const char* ssid, const char* password) {
@@ -84,11 +85,11 @@ void format_data(float readings[], int n) {
 void send_post_request(JsonArray& payload) {
   char buffer[1500];
   payload.printTo(buffer, sizeof(buffer));
-  Serial.println("[HTTP] begin...");
+///  Serial.println("[HTTP] begin...");
   http.begin("http://192.168.0.102/1");
   http.addHeader("Content-Type", "application/json");
   http.POST(buffer);
-  http.writeToStream(&Serial);
+//  http.writeToStream(&Serial);
   http.end();
 }
 

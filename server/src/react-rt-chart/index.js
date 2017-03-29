@@ -166,7 +166,7 @@ var RTChart = _react2.default.createClass({
       data: {
         x: 'x',
         columns: columns,
-        type: 'area'
+        type: 'area',
       },
       grid: {
         x: {

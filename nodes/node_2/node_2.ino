@@ -21,26 +21,32 @@ struct SensorData {
 };
 SensorData sensor_data[N_QUANTITIES];
 
+int manualControl = 0;
+
 long force;
 int motor_pin1 = 13; 
 int motor_pin2 = 15;
+int enable_pin = 5;
 
 void setup() {
   Serial.begin(115200);
   connect_to_AP(SSID, PASSWORD);
   pinMode(motor_pin1, OUTPUT);
   pinMode(motor_pin2, OUTPUT);
+  pinMode(enable_pin, OUTPUT);
   digitalWrite(motor_pin1, HIGH);
   digitalWrite(motor_pin2, LOW);
+  analogWrite(enable_pin, 1023);
 }
 
 void loop() {
   force = get_force();
-  checkThreshold();
+  check_threshold();
   float readings[N_QUANTITIES] = {force};
   format_data(readings, N_QUANTITIES);
   JsonArray& json_data = generate_json(sensor_data, N_QUANTITIES);
-  send_post_request(json_data); 
+  send_post_request(json_data);
+  delay(2000); 
 }
 
 void connect_to_AP(const char* ssid, const char* password) {
@@ -92,17 +98,18 @@ void format_data(float readings[], int n) {
 void send_post_request(JsonArray& payload) {
   char buffer[1500];
   payload.printTo(buffer, sizeof(buffer));
-  Serial.println("[HTTP] begin...");
+//  Serial.println("[HTTP] begin...");
   http.begin("http://192.168.0.102/2");
   http.addHeader("Content-Type", "application/json");
   int httpCode = http.POST(buffer);
   if (httpCode > 0) {
     if (httpCode == HTTP_CODE_OK) {
       String response = http.getString();
-      Serial.println(response);  
+      handle_response(response);
+//      Serial.println/(response);  
     }
   }
-  http.writeToStream(&Serial);
+//  http.writeToStream(&/Serial);
   http.end();
 }
 
@@ -121,10 +128,35 @@ JsonArray& generate_json(SensorData arr[], int n) {
   return root;
 }
 
-void checkThreshold() {
-    if (force >= 20) {
+void check_threshold() {
+  if (manualControl == 0) {
+    if (force >= 10) {
       digitalWrite(motor_pin1, LOW);  
     } else {
       digitalWrite(motor_pin1, HIGH);  
-    }
+    }   
+  }    
+}
+
+void handle_response(String response) {
+  const size_t buffer_size = JSON_OBJECT_SIZE(3) + 60;
+  StaticJsonBuffer<buffer_size> json_buffer;
+
+  String json = response;
+
+  JsonObject& root = json_buffer.parseObject(json);
+
+  manualControl = root["manualControl"];
+  int motorStatus = root["motorStatus"];
+  int motorSpeed = root["motorSpeed"];
+
+  if (manualControl == 1) {
+    if (motorStatus == 0) {
+      digitalWrite(motor_pin1, LOW);
+      Serial.println((String)motorStatus);  
+    } else {
+      digitalWrite(motor_pin1, HIGH);
+      analogWrite(enable_pin, motorSpeed);  
+    }       
+  }  
 }
